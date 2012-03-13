@@ -16,18 +16,32 @@ public class Solver {
 		while (!found && !foundTwin) {
 			solutionNode = pq.delMin();
 			twinNode = pqTwin.delMin();
+			//pq = new MinPQ<SearchNode>();
+			//pqTwin = new MinPQ<SearchNode>();
 			if (solutionNode.board.isGoal()) {
 				found = true;
 			}
 			if (twinNode.board.isGoal()) {
 				foundTwin = true;
 			}
+
+			//System.out.println(solutionNode.board);
 			for (Board b : solutionNode.board.neighbors()) {
-				if (!b.equals(solutionNode.board))
+				if (solutionNode.prev != null) {
+					if (!b.equals(solutionNode.prev.board)) { 
+						pq.insert(new SearchNode(b, solutionNode.iMoves + 1, solutionNode));
+						//System.out.println(b);
+					}
+				}
+				else
 					pq.insert(new SearchNode(b, solutionNode.iMoves + 1, solutionNode));
 			}
 			for (Board b : twinNode.board.neighbors()) {
-				if (!b.equals(twinNode.board))
+				if (twinNode.prev != null) {
+					if (!b.equals(twinNode.prev.board))
+						pqTwin.insert(new SearchNode(b, twinNode.iMoves + 1, twinNode));
+				}
+				else
 					pqTwin.insert(new SearchNode(b, twinNode.iMoves + 1, twinNode));
 			}
 		}
